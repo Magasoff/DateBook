@@ -6,6 +6,9 @@ import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.util.*;
 
+
+
+
 public class MyService {
 
     private static final Map<Integer, Repetable> actualTask = new HashMap<>();
@@ -50,10 +53,9 @@ public class MyService {
     }
 
 
-
-    public static List <Repetable> findTasksByDate (LocalDate localDate) {
-        List <Repetable> tasks = new ArrayList<>();
-        for (Repetable task : actualTask.values()){
+    public static List<Repetable> findTasksByDate(LocalDate localDate) {
+        List<Repetable> tasks = new ArrayList<>();
+        for (Repetable task : actualTask.values()) {
             if (task.checkOccurance(localDate.atStartOfDay()))
                 tasks.add(task);
         }
@@ -61,43 +63,44 @@ public class MyService {
     }
 
 
-
-
-    private static Task createTask (String headLine, TaskType taskType, String description, int occurance, LocalDateTime localDateTime) throws WrongInputException {
-        return switch (occurance) {
+    private static Task createTask(String headLine, TaskType taskType, String description, int occurance, LocalDateTime localDateTime) throws WrongInputException {
+        switch (occurance) {
             case 0 -> {
                 SingleTask singleTask = new SingleTask(headLine, description, taskType, localDateTime);
                 taskMap.put(singleTask.getId(), singleTask);
-                yield singleTask;
+                return singleTask;
+
             }
             case 1 -> {
                 DailyTask dailyTask = new DailyTask(headLine, description, taskType, localDateTime);
                 taskMap.put(dailyTask.getId(), dailyTask);
-                yield dailyTask;
+                return dailyTask;
             }
             case 2 -> {
-                WeeklyTask weeklyTask  = new WeeklyTask(headLine, description, taskType, localDateTime);
+                WeeklyTask weeklyTask = new WeeklyTask(headLine, description, taskType, localDateTime);
                 taskMap.put(weeklyTask.getId(), weeklyTask);
-                yield weeklyTask;
+                return weeklyTask;
             }
             case 3 -> {
                 MonthTask monthTask = new MonthTask(headLine, description, taskType, localDateTime);
                 taskMap.put(monthTask.getId(), monthTask);
-                yield monthTask;
+                return monthTask;
+
             }
             case 4 -> {
                 YearTask yearTask = new YearTask(headLine, description, taskType, localDateTime);
                 taskMap.put(yearTask.getId(), yearTask);
-                yield yearTask;
+                return yearTask;
             }
-            default -> null;
-        };
+        }
+        ;
+        return null;
     }
 
 
     public static void deleteTask(Scanner scanner) {
         System.out.println("Активные задачи\n");
-        printActiveTasks();
+        printActualTasks();
         try {
             System.out.println("Для удаления введите id задачи\n");
             int id = scanner.nextInt();
@@ -114,10 +117,7 @@ public class MyService {
     }
 
 
-
-
-
-    public static void getTasksByDay (Scanner scanner) {
+    public static void getTasksByDay(Scanner scanner) {
         System.out.println("Введите дату в формате dd.MM.yyyy");
         try {
             String date = scanner.next();
@@ -136,24 +136,17 @@ public class MyService {
     }
 
 
-
-
-
-    private static void printActiveTasks () {
+    public static void printArchivedTasks(Scanner scanner) {
         for (Repetable taskType : archivedTask.values()) {
             System.out.println(taskType);
         }
     }
 
 
+    public static void getGroupByDate() {
+        Map<LocalDate, ArrayList<Repetable>> taskMap = new HashMap<>();
 
-
-
-
-    public static void getGroupByDate (Scanner scanner) {
-        Map <LocalDate, ArrayList<Repetable>> taskMap = new HashMap<>();
-
-        for (Map.Entry <Integer,Repetable> entry: actualTask.entrySet()) {
+        for (Map.Entry<Integer, Repetable> entry : actualTask.entrySet()) {
             Repetable task = entry.getValue();
             LocalDate localDate = task.getFirstDate().toLocalDate();
             if (taskMap.containsKey(localDate)) {
@@ -163,12 +156,53 @@ public class MyService {
                 taskMap.put(localDate, new ArrayList<>(Collections.singletonList(task)));
             }
         }
-        for (Map.Entry<LocalDate, ArrayList<Repetable>> taskEntry: taskMap.entrySet()) {
+        for (Map.Entry<LocalDate, ArrayList<Repetable>> taskEntry : taskMap.entrySet()) {
             System.out.println(taskEntry.getKey() + " : " + taskEntry.getValue());
         }
     }
 
+    public static void editTask(Scanner scanner) {
+        try {
+            System.out.println("Редактирование задачи введите id");
+            printActualTasks();
+            int id = scanner.nextInt();
+            if (!actualTask.containsKey(id)) {
+                throw new WrongInputException("Задача не найдена");
+            }
+            System.out.println("Редактирование задачи 0 - заголовок, 1 - описание задачи");
+            int menuCase = scanner.nextInt();
+            switch (menuCase) {
+                case 0 -> {
+                    scanner.nextLine();
+                    System.out.println("Введите название задачи");
+                    String headLine = scanner.nextLine();
+                    Task task = (Task) actualTask.get(id);
+
+                    task.setHeadLine(headLine);
+
+                }
+                case 1 -> {
+                    scanner.nextLine();
+                    System.out.println("Опишите задачу");
+                    String description = scanner.nextLine();
+                    Repetable task = actualTask.get(id);
+                    task.setHeadLine(description);
+                }
+            }
+        } catch (WrongInputException e) {
+            System.out.println(e.getMessage());
+        }
+    }
+
+    private static void printActualTasks () {
+        for (Repetable task: actualTask.values()){
+            System.out.println(task);
+        }
+    }
 }
+
+
+
 
 
 

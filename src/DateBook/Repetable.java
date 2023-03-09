@@ -1,19 +1,17 @@
 package DateBook;
 
-
-
 import java.time.LocalDateTime;
+import java.lang.reflect.Type;
 
-public class Repetable {
-    boolean checkOccurance(LocalDateTime localDateTime) {
-        return false;
-    }
+public interface Repetable {
+    boolean checkOccurance(LocalDateTime localDateTime);
 
-    void setHeadLine(String headLine) {
-    }
+    void setHeadLine(String headLine);
 
-    LocalDateTime getFirstDate() {
-        return null;
-    }
+    void setArchived(boolean archived);
+
+    LocalDateTime getFirstDate();
 }
+
+
 

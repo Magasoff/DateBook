@@ -17,10 +17,17 @@ public class Main {
                             MyService.addTask(scanner);
                             break;
                         case 2:
-                            MyService.deleteTask(scanner);
+                            MyService.editTask(scanner);
                             break;
                         case 3:
-                            MyService.getGroupByDate(scanner);
+                            MyService.deleteTask(scanner);
+                            break;
+                        case 4:
+                            MyService.getTasksByDay(scanner);
+                        case 5:
+                            MyService.printArchivedTasks(scanner);
+                        case 6:
+                            MyService.getGroupByDate();
                             break;
                         case 0:
                             break label;

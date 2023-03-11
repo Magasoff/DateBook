@@ -39,7 +39,7 @@ public class MyService {
     private static void createEvent(Scanner scanner, String headLine, TaskType taskType, String description, int occurance) {
         try {
             LocalDateTime eventDate = LocalDateTime.parse(scanner.nextLine(), DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm"));
-            Task task = null;
+            Repetable task = null;
             try {
                 task = createTask(headLine, taskType, description, occurance, eventDate);
                 System.out.println("Создана задача" + task);
@@ -63,7 +63,7 @@ public class MyService {
     }
 
 
-    private static Task createTask(String headLine, TaskType taskType, String description, int occurance, LocalDateTime localDateTime) throws WrongInputException {
+    private static Repetable createTask(String headLine, TaskType taskType, String description, int occurance, LocalDateTime localDateTime) throws WrongInputException {
         switch (occurance) {
             case 0 -> {
                 SingleTask singleTask = new SingleTask(headLine, description, taskType, localDateTime);
@@ -124,7 +124,7 @@ public class MyService {
             DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("dd.MM.yyyy");
             LocalDate requestedDate = LocalDate.parse(date, dateTimeFormatter);
             List<Repetable> foundEvents = findTasksByDate(requestedDate);
-            System.out.println("Задачи на " + requestedDate + ": ");
+            System.out.println("Задачи на " + requestedDate + " : ");
             for (Repetable task : foundEvents) {
                 System.out.println(task);
             }
@@ -161,38 +161,6 @@ public class MyService {
         }
     }
 
-    public static void editTask(Scanner scanner) {
-        try {
-            System.out.println("Редактирование задачи введите id");
-            printActualTasks();
-            int id = scanner.nextInt();
-            if (!actualTask.containsKey(id)) {
-                throw new WrongInputException("Задача не найдена");
-            }
-            System.out.println("Редактирование задачи 0 - заголовок, 1 - описание задачи");
-            int menuCase = scanner.nextInt();
-            switch (menuCase) {
-                case 0 -> {
-                    scanner.nextLine();
-                    System.out.println("Введите название задачи");
-                    String headLine = scanner.nextLine();
-                    Task task = (Task) actualTask.get(id);
-
-                    task.setHeadLine(headLine);
-
-                }
-                case 1 -> {
-                    scanner.nextLine();
-                    System.out.println("Опишите задачу");
-                    String description = scanner.nextLine();
-                    Repetable task = actualTask.get(id);
-                    task.setHeadLine(description);
-                }
-            }
-        } catch (WrongInputException e) {
-            System.out.println(e.getMessage());
-        }
-    }
 
     private static void printActualTasks () {
         for (Repetable task: actualTask.values()){

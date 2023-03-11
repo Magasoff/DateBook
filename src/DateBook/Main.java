@@ -17,16 +17,13 @@ public class Main {
                             MyService.addTask(scanner);
                             break;
                         case 2:
-                            MyService.editTask(scanner);
-                            break;
-                        case 3:
                             MyService.deleteTask(scanner);
                             break;
-                        case 4:
+                        case 3:
                             MyService.getTasksByDay(scanner);
-                        case 5:
+                        case 4:
                             MyService.printArchivedTasks(scanner);
-                        case 6:
+                        case 5:
                             MyService.getGroupByDate();
                             break;
                         case 0:
